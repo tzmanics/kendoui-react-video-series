@@ -12,6 +12,10 @@ class App extends Component {
     super(props)
     this.state = {
       data: nutrition,
+      habitId: 0,
+      habitName: '',
+      habitIteration: 0,
+      habits: [],
       habitsOptions: [
         'Drink 1 Cup of Water',
         '1 Hour of Coding',
@@ -20,8 +24,28 @@ class App extends Component {
         '1 Hour of Reading',
         '10 Minutes of Meditation'
       ]
-    }
-  };
+    };
+  }
+
+  handleNameChange = (event) => {
+    this.setState({ habitName: event.target.value });
+  }
+
+  handleIterationChange = (event) => {
+    this.setState({ habitIteration: event.target.value });
+  }
+
+  handleAddHabit = (event) => {
+    this.setState({
+      habits: this.state.habits.concat([{
+        key: this.state.habitId,
+        name: this.state.habitName,
+        iterations: this.state.habitIteration
+      }]),
+      habitId: this.state.habitId +1
+    });
+  }
+ 
 
   render() {
     return (
@@ -30,17 +54,39 @@ class App extends Component {
         <div className='health-habits'>
           <h2> Healthy Habits </h2>
           <div className='habits-list'>
+            <ul key='all-habits'>
+              {this.state.habits.map((habit) => [
+                <li key={habit.habitId}>
+                  <h3>{habit.name}</h3>
+                  <div className='iterations-area'>
+                    {[...Array(habit.iterations)].map((iteration, index) => {
+                      return <input key={index} type='radio' />
+                    })}
+                  </div>
+                </li>
+              ])}
+            </ul>
           </div>
           <div className='add-habits'>
             <DropDownList
               data={this.state.habitsOptions}
+              value={this.state.habitName}
+              onChange={this.handleNameChange}
             />
-            <NumericTextBox />
-            <Button> Add Habit </Button>
+            <NumericTextBox
+              format='0'
+              min={0}
+              max={22}
+              value={this.state.habitIteration}
+              onChange={this.handleIterationChange}
+            />
+            <Button primary={true} onClick={this.handleAddHabit}>
+              Add Habit
+            </Button>
           </div>
         </div>
         <div className='nutrition-grid'>
-          <h2> 🥥 Healthy Fruits &amp; Veggies 🥦 </h2>
+          <h2> Healthy Fruits &amp; Veggies </h2>
           <Grid
             data={this.state.data}>
             <Column field='Description' title='Food' />
