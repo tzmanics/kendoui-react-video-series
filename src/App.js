@@ -3,6 +3,7 @@ import { DropDownList } from '@progress/kendo-react-dropdowns';
 import { NumericTextBox } from '@progress/kendo-react-inputs';
 import { Button } from '@progress/kendo-react-buttons';
 import { Grid, GridColumn as Column } from '@progress/kendo-react-grid';
+import { filterBy } from '@progress/kendo-data-query';
 import '@progress/kendo-theme-default/dist/all.css';
 import nutrition from './nutrition.json';
 import './App.css';
@@ -10,8 +11,18 @@ import './App.css';
 class App extends Component {
   constructor(props) {
     super(props)
+    const initialFilter = {
+      logic: 'and',
+      filters: [{
+        field: 'Description',
+        operator: 'contains',
+        value: 'Apple'
+      }]
+    };
+
     this.state = {
-      data: nutrition,
+      data: this.getNutrition(initialFilter),
+      filter: initialFilter,
       habitId: 0,
       habitName: '',
       habitIteration: 0,
@@ -46,6 +57,14 @@ class App extends Component {
     });
   }
  
+  handleFilterChange = (event) => {
+    this.setState({
+      data: this.getNutrition(event.filter),
+      filter: event.filter
+    });
+  }
+
+  getNutrition = (filter) => filterBy(nutrition, filter);
 
   render() {
     return (
@@ -88,7 +107,11 @@ class App extends Component {
         <div className='nutrition-grid'>
           <h2> Healthy Fruits &amp; Veggies </h2>
           <Grid
-            data={this.state.data}>
+            data={this.state.data}
+            style={{maxHeight: '500px'}}
+            filterable={true}
+            filter={this.state.filter}
+            filterChange={this.handleFilterChange}>
             <Column field='Description' title='Food' />
             <Column field='Measure' title='Amount' />
             <Column field='Protein(g)Per Measure' title='Protein' />
