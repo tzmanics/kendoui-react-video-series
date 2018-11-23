@@ -146,9 +146,9 @@ class App extends Component {
             filterChange={this.handleFilterChange}>
             <Column field='Description' title='Food' />
             <Column field='Measure' title='Amount' />
-            <Column field='Protein(g)Per Measure' title='Protein' />
-            <Column field='Carbohydrate, by difference(g)Per Measure' title='Carbs' />
-            <Column field='Sugars, total(g)Per Measure' title='Sugars' />
+            <Column field='Protein(g)Per Measure' title='Protein' filter="numeric"/>
+            <Column field='Carbohydrate, by difference(g)Per Measure' title='Carbs' filter="numeric"/>
+            <Column field='Sugars, total(g)Per Measure' title='Sugars'filter="numeric" />
           </Grid>
         </div>
         <div className='food-graph-input'>
